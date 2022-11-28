@@ -1,7 +1,7 @@
 package command;
 
- interface Command {
+interface Command {
 
-	void execute( String userCode, String bookCode);
-	
+	void execute(String code1, String code2);
+
 }

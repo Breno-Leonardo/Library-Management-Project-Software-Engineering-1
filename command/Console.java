@@ -18,11 +18,14 @@ import java.util.HashMap;
  		commands.put("emp",new ComandoEmprestimo());
  		commands.put("res",new ComandoReservar());
  		commands.put("dev",new ComandoDevolver());
- 		commands.put("obs",new ComandoDevolver());
+ 		commands.put("obs",new ComandoObservar());
+ 		commands.put("liv",new ComandoConsultarLivro());
+ 		commands.put("usu",new ComandoConsultarUsuario());
+ 		commands.put("ntf",new ComandoConsultarProfessor());
  	}
- 	public void executeCommand(String command, String userCode, String bookCode) {
+ 	public void executeCommand(String command, String code1, String code2) {
  		Command c= commands.get(command);
- 		c.execute(userCode, bookCode);
+ 		c.execute(code1, code2);
  	}
  
 }

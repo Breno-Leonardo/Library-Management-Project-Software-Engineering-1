@@ -1,11 +1,11 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
+class Livro implements Subject {
+	private String codigo, titulo, editora, autores, edicao, anoPublicacao;
 
- class Livro {
-	String codigo, titulo, editora, autores, edicao, anoPublicacao;
-	
 	public Livro(String codigo, String titulo, String editora, String autores, String edicao, String anoPublicacao) {
 		super();
 		this.codigo = codigo;
@@ -15,13 +15,11 @@ import java.util.ArrayList;
 		this.edicao = edicao;
 		this.anoPublicacao = anoPublicacao;
 	}
-	public  ArrayList<String> exemplares= new ArrayList<String>();
-	public  ArrayList<String> exemplaresEmprestados= new ArrayList<String>();
-	public  ArrayList<String> reservas= new ArrayList<String>();
-	
-	public int getExemplaresDisponiveis() {
-		return exemplares.size()-exemplaresEmprestados.size();
-	}
+
+	private ArrayList<String> exemplares = new ArrayList<String>();
+	private LinkedHashMap<String, Emprestimo> exemplaresEmprestados = new LinkedHashMap<String, Emprestimo>();
+	private ArrayList<String> reservas = new ArrayList<String>();
+	private ArrayList<IUsuarioObserver> observers = new ArrayList<IUsuarioObserver>();
 
 	public String getCodigo() {
 		return codigo;
@@ -47,17 +45,38 @@ import java.util.ArrayList;
 		return anoPublicacao;
 	}
 
-	public ArrayList<String> getExemplares() {
+	public ArrayList<String> getExemplaresDisponiveis() {
 		return exemplares;
 	}
 
-	public ArrayList<String> getExemplaresEmprestados() {
+	public LinkedHashMap<String, Emprestimo> getExemplaresEmprestados() {
 		return exemplaresEmprestados;
 	}
 
 	public ArrayList<String> getReservas() {
 		return reservas;
 	}
-	
-	
+
+	public void registerObserver(IUsuarioObserver o) {
+		observers.add(o);
+	}
+
+	public void removeObserver(IUsuarioObserver o) {
+		int i = observers.indexOf(o);
+		if (i >= 0) {
+			observers.remove(i);
+		}
+	}
+
+	public void notifyObservers() {
+		for (int i = 0; i < observers.size(); i++) {
+			IUsuarioObserver observer = observers.get(i);
+			observer.update(this);
+		}
+	}
+
+	public ArrayList<IUsuarioObserver> getObservers() {
+		return observers;
+	}
+
 }
