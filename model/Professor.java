@@ -12,6 +12,13 @@ class Professor implements IUsuarioObserver {
 	public ArrayList<String> reservas = new ArrayList<String>();
 	private HashMap<Livro, Integer> notificacoes = new HashMap<Livro, Integer>();// book code and book
 
+	
+	public Professor(String codigo, String nome) {
+		super();
+		this.codigo = codigo;
+		this.nome = nome;
+	}
+
 	public HashMap<Livro, Integer> getNotificacoes() {
 		return notificacoes;
 	}
@@ -57,7 +64,7 @@ class Professor implements IUsuarioObserver {
 			saida = false;
 			motivos.add("não há exemplares disponiveis");
 		}
-		if (!VerificadorEmprestimo.getInstance().isDevedor(this)) {
+		if (VerificadorEmprestimo.getInstance().isDevedor(this)== true) {
 			saida = false;
 			motivos.add("usuario esta com um livro atrasado");
 		}
@@ -68,9 +75,9 @@ class Professor implements IUsuarioObserver {
 		} else {
 			for (int i = 0; i < motivos.size(); i++) {
 				mensagem += motivos.get(i);
-				if (i == motivos.size() - 1) {
+				if (i == motivos.size() - 2) {
 					mensagem += " e ";
-				} else {
+				} else if(i != motivos.size() - 1) {
 					mensagem += ", ";
 				}
 			}
@@ -81,6 +88,7 @@ class Professor implements IUsuarioObserver {
 
 	@Override
 	public void update(Livro livro) {
+		//System.out.println("Fui notificado");
 		if (notificacoes.get(livro) == null)
 			notificacoes.put(livro, 1);
 		else

@@ -9,6 +9,13 @@ class AlunoPosGraduacao implements IUsuario {
 	private ArrayList<Emprestimo> historicoEmprestimos = new ArrayList<>();
 
 	public ArrayList<String> reservas = new ArrayList<String>();
+	
+	
+	public AlunoPosGraduacao(String codigo, String nome) {
+		super();
+		this.codigo = codigo;
+		this.nome = nome;
+	}
 
 	@Override
 	public int getTempoMaxEmprestimo() {
@@ -51,11 +58,11 @@ class AlunoPosGraduacao implements IUsuario {
 			saida = false;
 			motivos.add("não há exemplares disponiveis");
 		}
-		if (!VerificadorEmprestimo.getInstance().isDevedor(this)) {
+		if (VerificadorEmprestimo.getInstance().isDevedor(this)== true) {
 			saida = false;
 			motivos.add("usuario esta com um livro atrasado");
 		}
-		if (!VerificadorEmprestimo.getInstance().hasMaxBooks(this)) {
+		if (VerificadorEmprestimo.getInstance().hasMaxBooks(this)==true) {
 			saida = false;
 			motivos.add("usuario esta com o maximo de livros");
 		}
@@ -63,7 +70,7 @@ class AlunoPosGraduacao implements IUsuario {
 			saida = false;
 			motivos.add("livro ja reservado por outros usuarios");
 		}
-		if (!VerificadorEmprestimo.getInstance().checarEmprestimoExemplar(this, livro.getCodigo())) {
+		if (VerificadorEmprestimo.getInstance().checarEmprestimoExemplar(this, livro.getCodigo())== true) {
 			saida = false;
 			motivos.add("o usuario já possui emprestimo deste livro");
 		}
@@ -73,9 +80,9 @@ class AlunoPosGraduacao implements IUsuario {
 		} else {
 			for (int i = 0; i < motivos.size(); i++) {
 				mensagem += motivos.get(i);
-				if (i == motivos.size() - 1) {
+				if (i == motivos.size() - 2) {
 					mensagem += " e ";
-				} else {
+				} else if(i != motivos.size() - 1) {
 					mensagem += ", ";
 				}
 			}

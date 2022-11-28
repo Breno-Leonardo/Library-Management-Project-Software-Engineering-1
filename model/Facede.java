@@ -39,4 +39,7 @@ public class Facede {
 	public void consultarProfessor(String userCode) {
 		Biblioteca.getInstance().consultarProfessor(userCode);
 	}
+	public void inicializarTeste() {
+		Biblioteca.getInstance().inicializarTeste();
+	}
 }

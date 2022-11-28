@@ -17,7 +17,7 @@ class VerificadorEmprestimo {
 
 	public boolean isDisponivel(Livro livro) {
 
-		if (livro.getExemplaresDisponiveis().size() > livro.getExemplaresEmprestados().size()) {
+		if (livro.getExemplaresDisponiveis().size() > 0) {
 			return true;
 		}
 		return false;
@@ -48,8 +48,7 @@ class VerificadorEmprestimo {
 	}
 
 	public boolean hasMaxBooks(IUsuario usuario) {
-		if ((usuario.getLivrosEmPosse().size() >= usuario.getLimiteEmprestimos())
-				&& (usuario.getLimiteEmprestimos() != -1))
+		if ((usuario.getLivrosEmPosse().size() >= usuario.getLimiteEmprestimos()) && (usuario.getLimiteEmprestimos() != -1))
 			return true;
 		return false;
 	}
@@ -57,9 +56,9 @@ class VerificadorEmprestimo {
 	public boolean checarEmprestimoExemplar(IUsuario usuario, String bookCode) {
 		for (Emprestimo emprestimo : usuario.getLivrosEmPosse()) {
 			if (emprestimo.getLivroCode().equals(bookCode))
-				return false;
+				return true;
 		}
-		return true;
+		return false;
 	}
 
 	long getDiffTime(LocalDateTime date) {

@@ -58,6 +58,7 @@ class Biblioteca {
 			mensagem += " o usuario já possui reserva para este livro";
 			podeReservar = false;
 		}
+
 		if ((listaDeUsuarios.get(userCode).getReservas().size() == 3)) {
 			podeReservar = false;
 			if (!podeReservar)
@@ -80,6 +81,8 @@ class Biblioteca {
 
 	public void observar(String userCode, String bookCode) {
 		listaDeLivros.get(bookCode).registerObserver((IUsuarioObserver) listaDeUsuarios.get(userCode));
+		System.out.println("Usuario:  " + listaDeUsuarios.get(userCode).getNome()
+				+ " foi registrado nas notificacoes do livro: " + listaDeLivros.get(bookCode).getTitulo());
 	}
 
 	public void consultarLivro(String bookCode) {
@@ -98,10 +101,13 @@ class Biblioteca {
 		}
 		for (String exemplarCode : livro.getExemplaresEmprestados().keySet()) {
 			Emprestimo emprestimo = livro.getExemplaresEmprestados().get(exemplarCode);
+			LocalDateTime dataDevolucao = emprestimo.getDate()
+					.plusDays(listaDeUsuarios.get(emprestimo.getUserCode()).getTempoMaxEmprestimo());
 			System.out.println("Exemplar: " + exemplarCode + ", Status: Emprestado, Usuario: "
-					+ listaDeUsuarios.get(emprestimo.getUserCode()).getNome() + " ,Data: " + emprestimo.getDate()
-					+ ",Data pevista para devolução: " + emprestimo.getDate()
-							.plusDays(listaDeUsuarios.get(emprestimo.getUserCode()).getTempoMaxEmprestimo()));
+					+ listaDeUsuarios.get(emprestimo.getUserCode()).getNome() + " ,Data: "
+					+ emprestimo.getDate().getDayOfMonth() + "/" + emprestimo.getDate().getMonthValue() + "/"
+					+ emprestimo.getDate().getYear() + ",Data pevista para devolução: " + dataDevolucao.getDayOfMonth()
+					+ "/" + dataDevolucao.getMonthValue() + "/" + dataDevolucao.getYear());
 		}
 	}
 
@@ -113,17 +119,25 @@ class Biblioteca {
 			LocalDateTime dataDevolucao = emprestimo.getDate()
 					.plusDays(listaDeUsuarios.get(userCode).getTempoMaxEmprestimo());
 			System.out.println("Livro: " + listaDeLivros.get(emprestimo.getLivroCode()).getTitulo()
-					+ "Data Emprestimo: " + emprestimo.getDate() + ", Status: Em Curso" + ", Data Devolução Prevista: "
-					+ dataDevolucao);
+					+ "Data Emprestimo: " + emprestimo.getDate().getDayOfMonth() + "/"
+					+ emprestimo.getDate().getMonthValue() + "/" + emprestimo.getDate().getYear() + ", Status: Em Curso"
+					+ ", Data Devolução Prevista: " + dataDevolucao.getDayOfMonth() + "/"
+					+ dataDevolucao.getMonthValue() + "/" + dataDevolucao.getYear());
 
 		}
+		if (usuario.getLivrosEmPosse().size() == 0)
+			System.out.println("Nenhum");
 		System.out.println("Historico Emprestimos:");
 		for (Emprestimo emprestimo : usuario.getLivrosHistoricoEmprestimos()) {
 			System.out.println("Livro: " + listaDeLivros.get(emprestimo.getLivroCode()).getTitulo()
-					+ "Data Emprestimo: " + emprestimo.getDate() + ", Status: Finalizado" + ", Data Devolução: "
-					+ emprestimo.getDateDevolucao());
+					+ "Data Emprestimo: " + emprestimo.getDate().getDayOfMonth() + "/"
+					+ emprestimo.getDate().getMonthValue() + "/" + emprestimo.getDate().getYear()
+					+ ", Status: Finalizado" + ", Data Devolução: " + emprestimo.getDateDevolucao().getDayOfMonth()
+					+ "/" + emprestimo.getDateDevolucao().getMonthValue() + "/"
+					+ emprestimo.getDateDevolucao().getYear());
 		}
-
+		if (usuario.getLivrosHistoricoEmprestimos().size() == 0)
+			System.out.println("Nenhum");
 	}
 
 	public void consultarProfessor(String userCode) {
@@ -134,6 +148,8 @@ class Biblioteca {
 			System.out.println(
 					"Livro: " + livro.getTitulo() + ", Notificações: " + professor.getNotificacoes().get(livro));
 		}
+		if(professor.getNotificacoes().size()==0)
+			System.out.println("Nenhuma");
 	}
 
 	public HashMap<String, Livro> getListaDeLivros() {
@@ -146,6 +162,42 @@ class Biblioteca {
 
 	public HashMap<String, Emprestimo> getEmprestimosAtuais() {
 		return emprestimosAtuais;
+	}
+
+	public void inicializarTeste() {
+		listaDeUsuarios.put("123", new AlunoGraduacao("123", "João da Silva"));
+		listaDeUsuarios.put("456", new AlunoPosGraduacao("456", "Luiz Fernando Rodrigues"));
+		listaDeUsuarios.put("789", new AlunoGraduacao("789", "Pedro Paulo"));
+		listaDeUsuarios.put("100", new Professor("100", "Carlos Lucena"));
+
+		listaDeLivros.put("100",
+				new Livro("100", "Engenharia de Software", "AddisonWesley", "Ian Sommervile", "6ª", "2000"));
+		listaDeLivros.put("101", new Livro("101", "UML – Guia do Usuário", "Campus",
+				"Grady Booch, James Rumbaugh, Ivar Jacobson", "7ª ", "2000"));
+		listaDeLivros.put("200", new Livro("200", "Code Complete", "Microsoft Press", "Steve McConnell", "2ª", "2014"));
+		listaDeLivros.put("201", new Livro("201", "Agile Software Development, Principles, Patterns, and Practices",
+				"Prentice Hall", "Robert Martin", "1ª ", "2002"));
+		listaDeLivros.put("300", new Livro("300", "Refactoring: Improving the Design of Existing Code",
+				"Addison-Wesley Professional", "Martin Fowler", "1ª", "1999"));
+		listaDeLivros.put("301", new Livro("301", "Software Metrics: A Rigorous and Practical Approach", "CRC Press",
+				"Norman Fenton, James Bieman", "3ª", "2014"));
+		listaDeLivros.put("400",
+				new Livro("400", "Design Patterns: Elements of Reusable Object-Oriented Software",
+						"Addison-Wesley Professional", "Erich Gamma, Richard Helm, Ralph Johnson, John Vlissides", "1ª",
+						"1994"));
+		listaDeLivros.put("401",
+				new Livro("401", "UML Distilled: A Brief Guide to the Standard Object Modeling Language",
+						"Addison-Wesley Professional", "Martin Fowler", "3ª", "2003"));
+
+		listaDeLivros.get("100").getExemplaresDisponiveis().add("01");
+		listaDeLivros.get("100").getExemplaresDisponiveis().add("02");
+		listaDeLivros.get("101").getExemplaresDisponiveis().add("03");
+		listaDeLivros.get("200").getExemplaresDisponiveis().add("04");
+		listaDeLivros.get("201").getExemplaresDisponiveis().add("05");
+		listaDeLivros.get("300").getExemplaresDisponiveis().add("06");
+		listaDeLivros.get("300").getExemplaresDisponiveis().add("07");
+		listaDeLivros.get("400").getExemplaresDisponiveis().add("08");
+		listaDeLivros.get("400").getExemplaresDisponiveis().add("09");
 	}
 
 }
