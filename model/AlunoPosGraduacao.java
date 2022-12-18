@@ -8,7 +8,7 @@ class AlunoPosGraduacao implements IUsuario {
 	private ArrayList<Emprestimo> livrosEmPosse = new ArrayList<>();
 	private ArrayList<Emprestimo> historicoEmprestimos = new ArrayList<>();
 
-	public ArrayList<String> reservas = new ArrayList<String>();
+	public ArrayList<Reserva> reservas = new ArrayList<Reserva>();
 	
 	
 	public AlunoPosGraduacao(String codigo, String nome) {
@@ -43,7 +43,7 @@ class AlunoPosGraduacao implements IUsuario {
 	}
 
 	@Override
-	public ArrayList<String> getReservas() {
+	public ArrayList<Reserva> getReservas() {
 		return reservas;
 	}
 

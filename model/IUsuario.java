@@ -9,7 +9,7 @@ public String getCodigo();
 public String getNome();
 public ArrayList<Emprestimo> getLivrosEmPosse() ;
 public ArrayList<Emprestimo> getLivrosHistoricoEmprestimos() ;
-public ArrayList<String> getReservas() ;
+public ArrayList<Reserva> getReservas() ;
 public boolean viabilidadeEmprestimo(Livro livro);
 
 }

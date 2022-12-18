@@ -22,9 +22,9 @@ class Biblioteca {
 	public void emprestar(String userCode, String bookCode) {
 		boolean podeEmprestar = listaDeUsuarios.get(userCode).viabilidadeEmprestimo(listaDeLivros.get(bookCode));
 		if (podeEmprestar) {
-			String exemplarCode = listaDeLivros.get(bookCode).getExemplaresDisponiveis().remove(0);
-			Emprestimo emprestimo = new Emprestimo(bookCode, exemplarCode, LocalDateTime.now(), userCode);
-			listaDeLivros.get(bookCode).getExemplaresEmprestados().put(exemplarCode, emprestimo);
+			Exemplar exemplar = listaDeLivros.get(bookCode).getExemplaresDisponiveis().remove(0);
+			Emprestimo emprestimo = new Emprestimo(bookCode, exemplar, LocalDateTime.now(), userCode);
+			listaDeLivros.get(bookCode).getExemplaresEmprestados().put(exemplar, emprestimo);
 			listaDeUsuarios.get(userCode).getLivrosEmPosse().add(emprestimo);
 			emprestimosAtuais.put(bookCode, emprestimo);
 		}
@@ -34,8 +34,8 @@ class Biblioteca {
 		for (int i = 0; i < listaDeUsuarios.get(userCode).getLivrosEmPosse().size(); i++) {
 			if (listaDeUsuarios.get(userCode).getLivrosEmPosse().get(i).getLivroCode().equals(bookCode)) {
 				Emprestimo emprestimo = listaDeUsuarios.get(userCode).getLivrosEmPosse().remove(i);
-				listaDeLivros.get(bookCode).getExemplaresDisponiveis().add(emprestimo.getCodExemplar());
-				listaDeLivros.get(bookCode).getExemplaresEmprestados().remove(emprestimo.getCodExemplar());
+				listaDeLivros.get(bookCode).getExemplaresDisponiveis().add(emprestimo.getExemplar());
+				listaDeLivros.get(bookCode).getExemplaresEmprestados().remove(emprestimo.getExemplar());
 				emprestimosAtuais.remove(emprestimo.getLivroCode(), emprestimo);
 
 				emprestimo.setDateDevolucao(LocalDateTime.now());
@@ -54,10 +54,15 @@ class Biblioteca {
 		boolean podeReservar = true;
 		String mensagem = "A reserva do livro: " + listaDeLivros.get(bookCode).getTitulo() + " para o usuario "
 				+ listaDeUsuarios.get(userCode).getNome() + " não foi possivel, pelos motivos: ";
-		if (listaDeUsuarios.get(userCode).getReservas().contains(bookCode) == true) {
-			mensagem += " o usuario já possui reserva para este livro";
-			podeReservar = false;
+		
+		for (Reserva reserva : listaDeUsuarios.get(userCode).getReservas()) {
+			if (reserva.getCodigoLivro().equals(bookCode)) {
+				mensagem += " o usuario já possui reserva para este livro";
+				podeReservar = false;
+				break;
+			}
 		}
+		
 
 		if ((listaDeUsuarios.get(userCode).getReservas().size() == 3)) {
 			podeReservar = false;
@@ -70,7 +75,7 @@ class Biblioteca {
 			System.out.println("Reserva do livro: " + listaDeLivros.get(bookCode).getTitulo()
 					+ " efetuada com sucesso pelo usuario: " + listaDeUsuarios.get(userCode).getNome());
 			listaDeLivros.get(bookCode).getReservas().add(userCode);
-			listaDeUsuarios.get(userCode).getReservas().add(bookCode);
+			listaDeUsuarios.get(userCode).getReservas().add(new Reserva(bookCode));
 			if (listaDeLivros.get(bookCode).getReservas().size() > 2) {
 				listaDeLivros.get(bookCode).notifyObservers();
 			}
@@ -96,10 +101,10 @@ class Biblioteca {
 			}
 		}
 		System.out.println("Exemplares: ");
-		for (String exemplarCode : livro.getExemplaresDisponiveis()) {
-			System.out.println("Exemplar: " + exemplarCode + " Status: Disponivel");
+		for (Exemplar exemplar : livro.getExemplaresDisponiveis()) {
+			System.out.println("Exemplar: " + exemplar.getCodigo() + " Status: Disponivel");
 		}
-		for (String exemplarCode : livro.getExemplaresEmprestados().keySet()) {
+		for (Exemplar exemplarCode : livro.getExemplaresEmprestados().keySet()) {
 			Emprestimo emprestimo = livro.getExemplaresEmprestados().get(exemplarCode);
 			LocalDateTime dataDevolucao = emprestimo.getDate()
 					.plusDays(listaDeUsuarios.get(emprestimo.getUserCode()).getTempoMaxEmprestimo());
@@ -189,15 +194,15 @@ class Biblioteca {
 				new Livro("401", "UML Distilled: A Brief Guide to the Standard Object Modeling Language",
 						"Addison-Wesley Professional", "Martin Fowler", "3ª", "2003"));
 
-		listaDeLivros.get("100").getExemplaresDisponiveis().add("01");
-		listaDeLivros.get("100").getExemplaresDisponiveis().add("02");
-		listaDeLivros.get("101").getExemplaresDisponiveis().add("03");
-		listaDeLivros.get("200").getExemplaresDisponiveis().add("04");
-		listaDeLivros.get("201").getExemplaresDisponiveis().add("05");
-		listaDeLivros.get("300").getExemplaresDisponiveis().add("06");
-		listaDeLivros.get("300").getExemplaresDisponiveis().add("07");
-		listaDeLivros.get("400").getExemplaresDisponiveis().add("08");
-		listaDeLivros.get("400").getExemplaresDisponiveis().add("09");
+		listaDeLivros.get("100").getExemplaresDisponiveis().add(new Exemplar("01"));
+		listaDeLivros.get("100").getExemplaresDisponiveis().add(new Exemplar("02"));
+		listaDeLivros.get("101").getExemplaresDisponiveis().add(new Exemplar("03"));
+		listaDeLivros.get("200").getExemplaresDisponiveis().add(new Exemplar("04"));
+		listaDeLivros.get("201").getExemplaresDisponiveis().add(new Exemplar("05"));
+		listaDeLivros.get("300").getExemplaresDisponiveis().add(new Exemplar("06"));
+		listaDeLivros.get("300").getExemplaresDisponiveis().add(new Exemplar("07"));
+		listaDeLivros.get("400").getExemplaresDisponiveis().add(new Exemplar("08"));
+		listaDeLivros.get("400").getExemplaresDisponiveis().add(new Exemplar("09"));
 	}
 
 }

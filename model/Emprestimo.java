@@ -4,38 +4,42 @@ import java.time.LocalDateTime;
 
 class Emprestimo {
 
-	private String LivroCode;
-	private String codExemplar;
+	private String livroCode;
+	private Exemplar exemplar;
 	private LocalDateTime date;
 	private LocalDateTime dateDevolucao;
 	private String userCode;
 
-	public Emprestimo(String livro, String codExemplar, LocalDateTime date, String userCode) {
+	public Emprestimo(String livro, Exemplar exemplar, LocalDateTime date, String userCode) {
 		super();
-		LivroCode = livro;
-		this.codExemplar = codExemplar;
+		livroCode = livro;
+		this.exemplar = exemplar;
 		this.date = date;
 		this.userCode = userCode;
 	}
 
 	public String getLivroCode() {
-		return LivroCode;
+		return livroCode;
 	}
 
 	public void setLivroCode(String livro) {
-		LivroCode = livro;
+		livroCode = livro;
 	}
 
 	public String getUserCode() {
 		return userCode;
 	}
 
-	public String getCodExemplar() {
-		return codExemplar;
+	public Exemplar getExemplar() {
+		return exemplar;
 	}
 
-	public void setCodExemplar(String codExemplar) {
-		this.codExemplar = codExemplar;
+	public void setExemplar(Exemplar exemplar) {
+		this.exemplar = exemplar;
+	}
+
+	public void setUserCode(String userCode) {
+		this.userCode = userCode;
 	}
 
 	public LocalDateTime getDate() {

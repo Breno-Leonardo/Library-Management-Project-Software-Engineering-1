@@ -27,13 +27,15 @@ class VerificadorEmprestimo {
 		int quantidadeReservas = Biblioteca.getInstance().getListaDeLivros().get(bookCode).getReservas().size();
 		int exemplaresDisponiveis = Biblioteca.getInstance().getListaDeLivros().get(bookCode).getExemplaresDisponiveis()
 				.size();
-		if (usuario.getReservas().contains(bookCode)) {// ja tem reserva
-			if (exemplaresDisponiveis >= quantidadeReservas)
-				return true;
-		} else {// nao tem reserva
-			if (exemplaresDisponiveis > quantidadeReservas)
-				return true;
+
+		for (Reserva reserva : usuario.getReservas()) {
+			if (reserva.getCodigoLivro().equals(bookCode)) {
+				if (exemplaresDisponiveis >= quantidadeReservas)
+					return true;
+			}
 		}
+		if (exemplaresDisponiveis > quantidadeReservas)
+			return true;
 
 		return false;
 	}
@@ -48,7 +50,8 @@ class VerificadorEmprestimo {
 	}
 
 	public boolean hasMaxBooks(IUsuario usuario) {
-		if ((usuario.getLivrosEmPosse().size() >= usuario.getLimiteEmprestimos()) && (usuario.getLimiteEmprestimos() != -1))
+		if ((usuario.getLivrosEmPosse().size() >= usuario.getLimiteEmprestimos())
+				&& (usuario.getLimiteEmprestimos() != -1))
 			return true;
 		return false;
 	}

@@ -16,8 +16,8 @@ class Livro implements Subject {
 		this.anoPublicacao = anoPublicacao;
 	}
 
-	private ArrayList<String> exemplares = new ArrayList<String>();
-	private LinkedHashMap<String, Emprestimo> exemplaresEmprestados = new LinkedHashMap<String, Emprestimo>();
+	private ArrayList<Exemplar> exemplares = new ArrayList<Exemplar>();
+	private LinkedHashMap<Exemplar, Emprestimo> exemplaresEmprestados = new LinkedHashMap<Exemplar, Emprestimo>();
 	private ArrayList<String> reservas = new ArrayList<String>();
 	private ArrayList<IUsuarioObserver> observers = new ArrayList<IUsuarioObserver>();
 
@@ -45,11 +45,11 @@ class Livro implements Subject {
 		return anoPublicacao;
 	}
 
-	public ArrayList<String> getExemplaresDisponiveis() {
+	public ArrayList<Exemplar> getExemplaresDisponiveis() {
 		return exemplares;
 	}
 
-	public LinkedHashMap<String, Emprestimo> getExemplaresEmprestados() {
+	public LinkedHashMap<Exemplar, Emprestimo> getExemplaresEmprestados() {
 		return exemplaresEmprestados;
 	}
 

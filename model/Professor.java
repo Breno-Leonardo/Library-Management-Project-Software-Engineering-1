@@ -9,7 +9,7 @@ class Professor implements IUsuarioObserver {
 	private ArrayList<Emprestimo> livrosEmPosse = new ArrayList<>();
 	private ArrayList<Emprestimo> historicoEmprestimos = new ArrayList<>();
 
-	public ArrayList<String> reservas = new ArrayList<String>();
+	public ArrayList<Reserva> reservas = new ArrayList<Reserva>();
 	private HashMap<Livro, Integer> notificacoes = new HashMap<Livro, Integer>();// book code and book
 
 	
@@ -49,7 +49,7 @@ class Professor implements IUsuarioObserver {
 	}
 
 	@Override
-	public ArrayList<String> getReservas() {
+	public ArrayList<Reserva> getReservas() {
 		return reservas;
 	}
 
